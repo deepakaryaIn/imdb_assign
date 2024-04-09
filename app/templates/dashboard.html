@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <!-- Include CSS styles from the static directory -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <!-- Display available movies/shows data -->
+    <div id="movies-section">
+        <h2>Movies/Shows</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Title</th>
+                    <th><a href="?sort=date_added">Date Added</a></th>
+                    <th><a href="?sort=release_year">Release Year</a></th>
+                    <th><a href="?sort=duration">Duration</a></th>
+                    <th>Listed In</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for movie in movies %}
+                <tr>
+                    <td>{{ movie.type }}</td>
+                    <td>{{ movie.title }}</td>
+                    <td>{{ movie.date_added }}</td>
+                    <td>{{ movie.release_year }}</td>
+                    <td>{{ movie.duration }}</td>
+                    <td>{{ movie.listed_in }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div>Total Movies/Shows: {{ total_movies }}</div>
+        <div>Page: {{ page }} - Per Page: {{ per_page }}</div>
+        <div class="pagination-buttons">
+            {% if page > 1 %}
+            <a href="?page={{ page - 1 }}">Previous</a>
+            {% endif %}
+            {% if total_movies > page * per_page %}
+            <a href="?page={{ page + 1 }}">Next</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Signout button -->
+    <div id="signout-section">
+        <form action="/logout" method="GET">
+            <button type="submit">Sign Out</button>
+        </form>
+    </div>
+
+    <!-- Upload CSV section -->
+    <div id="upload-section">
+        <h2>Upload CSV</h2>
+        <form id="upload-form" action="/upload-csv" method="POST" enctype="multipart/form-data">
+            <input type="file" name="file" id="file-input">
+            <button type="submit">Upload</button>
+        </form>
+        <div id="progress">Upload Progress: 0%</div>
+    </div>
+
+    <!-- Include jQuery library -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Include your script file -->
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+</body>
+</html>
